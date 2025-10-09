@@ -12,7 +12,7 @@ const farPlane = 1000;
 const scene = new THREE.Scene();
 
 const camera = new THREE.PerspectiveCamera(cameraFov,ratio,nearPlane,farPlane);
-camera.position.z = 5;
+camera.position.z = 1;
 
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(width, height);
@@ -23,28 +23,18 @@ document.body.appendChild(renderer.domElement);
 const vertexShader = document.getElementById("vertexShader").textContent;
 const fragmentShader = document.getElementById("fragmentShader").textContent;
 
-let vertices = new Float32Array( [
-	-2.0, -2.0,  1.0, // v0
-	 2.0, -2.0,  1.0, // v1
-	 0.0,  1,  1.0, // v2
-]);
-
-const geometry = new THREE.BufferGeometry();
-geometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
+const geometry = new THREE.PlaneGeometry(1,1);
 
 const material = new THREE.ShaderMaterial({
-    uniforms: {
-        uTime:{value:0}
-    },
-    vertexShader,
-    fragmentShader
+    vertexShader: vertexShader,
+    fragmentShader: fragmentShader,
+    uniforms:{}
 });
 
-const cube = new THREE.Mesh(geometry,material);
-scene.add(cube);
+const object = new THREE.Mesh(geometry,material);
+scene.add(object);
 
 // MAIN LOOP
-function animate(time) {
-    material.uniforms.uTime.value += time*1e-5;
+function animate() {
     renderer.render(scene,camera);
 }
