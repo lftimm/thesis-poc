@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { OrbitControls } from 'three/examples/jsm/Addons.js';
+import { OrbitControls, ThreeMFLoader } from 'three/examples/jsm/Addons.js';
 
 // CONSTANTS
 const width = window.innerWidth;
@@ -18,7 +18,7 @@ renderer.setAnimationLoop(animate);
 document.body.appendChild(renderer.domElement);
 
 const camera = new THREE.PerspectiveCamera(cameraFov,ratio,nearPlane,farPlane);
-camera.position.z = 1;
+camera.position.x = 10;
 
 const controls = new OrbitControls(camera,renderer.domElement);
 controls.enableDamping = true;
@@ -27,15 +27,21 @@ controls.enableDamping = true;
 const vertexShader = document.getElementById("vertexShader").textContent;
 const fragmentShader = document.getElementById("fragmentShader").textContent;
 
-// const geometry = new THREE.PlaneGeometry(1,1);
-const geometry = new THREE.IcosahedronGeometry(0.5,32,16);
+const geometry = new THREE.CylinderGeometry(1,1,10,50,50);
+
+const texture = new THREE.TextureLoader().load('resources/concrete.jpg')
+texture.wrapS = THREE.RepeatWrapping;
 
 const material = new THREE.ShaderMaterial({
     vertexShader: vertexShader,
     fragmentShader: fragmentShader,
+    uniforms:{
+        uTexture:{value: texture}
+    }
 });
 
 const object = new THREE.Mesh(geometry,material);
+object.rotation.x = Math.PI/2;
 scene.add(object);
 
 // MAIN LOOP
