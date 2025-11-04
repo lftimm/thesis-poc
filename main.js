@@ -33,8 +33,6 @@ const geometry = new THREE.CylinderGeometry(1,1,10,50,50);
 const texture = new THREE.TextureLoader().load('resources/concrete.jpg')
 texture.wrapS = THREE.RepeatWrapping;
 
-
-
 const material = new THREE.ShaderMaterial({
     vertexShader: vertexShader,
     fragmentShader: fragmentShader,
