@@ -8,8 +8,8 @@ import fragmentShader from  './shaders/frag.frag?raw';
 const width = window.innerWidth;
 const height = window.innerHeight;
 const ratio = width/height;
-const cameraFov = 75;
-const nearPlane = 0.1;
+const cameraFov = 60;
+const nearPlane = 0.01;
 const farPlane = 1000;
 
 // SCENE DEFINITIONS
@@ -26,9 +26,13 @@ camera.position.x = 10;
 const controls = new OrbitControls(camera,renderer.domElement);
 controls.enableDamping = true;
 
+const axesHelper = new THREE.AxesHelper();
+scene.add(axesHelper);
 
 // SCENE OBJECTS
-const geometry = new THREE.CylinderGeometry(1,1,10,50,50);
+const length = 10;
+const radius = 1;
+const geometry = new THREE.CylinderGeometry(radius,radius,length,50,50);
 
 const texture = new THREE.TextureLoader().load('resources/concrete.jpg')
 texture.wrapS = THREE.RepeatWrapping;
@@ -37,7 +41,9 @@ const material = new THREE.ShaderMaterial({
     vertexShader: vertexShader,
     fragmentShader: fragmentShader,
     uniforms:{
-        uTexture:{value: texture}
+        uTexture:{value: texture},
+        uLength:{value: length},
+        uRadius:{value: radius}
     }
 });
 
@@ -45,6 +51,7 @@ const object = new THREE.Mesh(geometry,material);
 object.rotation.x = Math.PI/2;
 scene.add(object);
 
+console.log(object.geometry.attributes.position);
 // MAIN LOOP
 function animate() {
     renderer.render(scene,camera);
