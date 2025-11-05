@@ -1,5 +1,6 @@
 import * as THREE from 'three';
-import { OrbitControls, ThreeMFLoader } from 'three/examples/jsm/Addons.js';
+import { OrbitControls  } from 'three/examples/jsm/Addons.js';
+import { GUI } from 'dat.gui';
 
 import vertexShader from './shaders/vert.vert?raw';
 import fragmentShader from  './shaders/frag.frag?raw';
@@ -12,10 +13,12 @@ const cameraFov = 60;
 const nearPlane = 0.01;
 const farPlane = 1000;
 
+
+
 // SCENE DEFINITIONS
 const scene = new THREE.Scene();
 
-const renderer = new THREE.WebGLRenderer();
+const renderer = new THREE.WebGLRenderer({antialiasing:true});
 renderer.setSize(width, height);
 renderer.setAnimationLoop(animate);
 document.body.appendChild(renderer.domElement);
@@ -26,12 +29,10 @@ camera.position.x = 10;
 const controls = new OrbitControls(camera,renderer.domElement);
 controls.enableDamping = true;
 
-const axesHelper = new THREE.AxesHelper();
-scene.add(axesHelper);
-
 // SCENE OBJECTS
+let load = 1000e3;
 const length = 10;
-const radius = 1;
+const radius = 0.5;
 const geometry = new THREE.CylinderGeometry(radius,radius,length,50,50);
 
 const texture = new THREE.TextureLoader().load('resources/concrete.jpg')
@@ -43,15 +44,27 @@ const material = new THREE.ShaderMaterial({
     uniforms:{
         uTexture:{value: texture},
         uLength:{value: length},
-        uRadius:{value: radius}
+        uRadius:{value: radius},
+        uLoad:{value: load}
     }
 });
+// GUI
+const gui = new GUI();
+
+const params = {
+    loadKN: 1.0  // Display in kN
+};
+
+gui.add(params, "loadKN", 0, 10000, 1)
+   .name("Load (kN)")
+   .onChange((value) => {
+       material.uniforms.uLoad.value = value * 1000;  // Convert to N
+   });
 
 const object = new THREE.Mesh(geometry,material);
 object.rotation.x = Math.PI/2;
 scene.add(object);
 
-console.log(object.geometry.attributes.position);
 // MAIN LOOP
 function animate() {
     renderer.render(scene,camera);
