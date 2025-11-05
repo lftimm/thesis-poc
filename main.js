@@ -16,7 +16,7 @@ const farPlane = 1000;
 // SCENE DEFINITIONS
 const scene = new THREE.Scene();
 
-const renderer = new THREE.WebGLRenderer({antialiasing:true});
+const renderer = new THREE.WebGLRenderer({antialias:true});
 renderer.setSize(width, height);
 renderer.setAnimationLoop(animate);
 document.body.appendChild(renderer.domElement);
